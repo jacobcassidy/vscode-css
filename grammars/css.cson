@@ -455,6 +455,9 @@ repository:
         name: 'meta.at-rule.media.body.css'
         patterns: [
           {
+            include: '#properties-list-innards'
+          }
+          {
             include: '$self'
           }
         ]
@@ -514,6 +517,9 @@ repository:
         name: 'meta.at-rule.supports.body.css'
         patterns: [
           {
+            include: '#properties-list-innards'
+          }
+          {
             include: '$self'
           }
         ]
@@ -545,6 +551,9 @@ repository:
             name: 'punctuation.section.end.bracket.curly.css'
         name: 'meta.at-rule.body.css'
         patterns: [
+          {
+            include: '#properties-list-innards'
+          }
           {
             include: '$self'
           }
@@ -1302,6 +1311,9 @@ repository:
       }
       {
         include: '#font-features'
+      }
+      {
+        include: '#selectors'
       }
       {
         include: '#property'
