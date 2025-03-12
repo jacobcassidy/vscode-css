@@ -1288,6 +1288,9 @@ repository:
       {
         include: '#properties-list-innards'
       }
+      {
+        include: '$self'
+      }
     ]
   'properties-list-innards':
     patterns: [
