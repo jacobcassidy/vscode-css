@@ -1239,6 +1239,9 @@ repository:
           {
             include: '#comment-block'
           }
+          {
+            include: '#functions'
+          }
         ]
       }
     ]
