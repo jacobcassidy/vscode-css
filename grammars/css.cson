@@ -952,6 +952,9 @@ repository:
         name: 'constant.numeric.other.density.css'
       }
       {
+        include: '#arithmetic-operators'
+      }
+      {
         include: '#property-values'
       }
       {
