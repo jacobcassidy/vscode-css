@@ -23,7 +23,7 @@ patterns: [
     include: '#escapes'
   }
   {
-    include: '#selector-combinators'
+    include: '#selector-invalid-combinators'
   }
   {
     include: '#selectors'
@@ -1714,7 +1714,7 @@ repository:
         include: '#selector-nesting'
       }
       {
-        include: "#selector-invalid"
+        include: '#selector-invalid-identifier'
       }
       {
         include: '#selector-class'
@@ -1847,16 +1847,8 @@ repository:
     '''
     name: 'entity.other.attribute-name.class.css'
   'selector-combinators':
-    patterns: [
-      {
-        match: '/deep/|>>>'
-        name: 'invalid.deprecated.combinator.css'
-      }
-      {
-        match: '>>|>|\\+|~'
-        name: 'keyword.operator.combinator.css'
-      }
-    ]
+    match: '>>|>|\\+|~'
+    name: 'keyword.operator.combinator.css'
   'selector-custom':
     match: '''(?x) (?<![@\\w-])
       (?=            # Custom element names must:
@@ -2032,7 +2024,10 @@ repository:
       (?=$|[\\s,.\\#)\\[:{>+~|&]|/\\*)
     '''
     name: 'entity.other.attribute-name.id.css'
-  'selector-invalid':
+  'selector-invalid-combinators':
+    match: '/deep/|>>>'
+    name: 'invalid.deprecated.combinator.css'
+  'selector-invalid-identifier':
     captures:
       '1':
         name: 'punctuation.definition.entity.css'
