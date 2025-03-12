@@ -1627,7 +1627,7 @@ repository:
       (?=
         (?:\\|)?                    # Possible anonymous namespace prefix
         (?:
-          [-\\[:.*\\#a-zA-Z_]       # Valid selector character
+          [-\\[:.*&\\#a-zA-Z_]      # Valid selector character
           |
           [^\\x00-\\x7F]            # Which can include non-ASCII symbols
           |
@@ -1665,6 +1665,9 @@ repository:
       }
       {
         include: '#selector-universal'
+      }
+      {
+        include: '#selector-nesting'
       }
       {
         include: "#selector-invalid"
@@ -1794,7 +1797,7 @@ repository:
         )+
       )                                      # Followed by either:
       (?= $                                  # - End of the line
-        | [\\s,.\\#)\\[:{>+~|]               # - Another selector
+        | [\\s,.\\#)\\[:{>+~|&]              # - Another selector
         | /\\*                               # - A block comment
       )
     '''
@@ -1982,7 +1985,7 @@ repository:
         (?![0-9])
         (?:[-a-zA-Z0-9_]|[^\\x00-\\x7F]|\\\\(?:[0-9a-fA-F]{1,6}|.))+
       )
-      (?=$|[\\s,.\\#)\\[:{>+~|]|/\\*)
+      (?=$|[\\s,.\\#)\\[:{>+~|&]|/\\*)
     '''
     name: 'entity.other.attribute-name.id.css'
   'selector-invalid':
@@ -2006,7 +2009,7 @@ repository:
           # Consists of a hyphen only
           -                                      # Terminated by either:
           (?= $                                  # - End-of-line
-            | [\\s,.\\#)\\[:{>+~|]               # - Followed by another selector
+            | [\\s,.\\#)\\[:{>+~|&]              # - Followed by another selector
             | /\\*                               # - Followed by a block comment
           )
           |
@@ -2016,7 +2019,7 @@ repository:
             | \\\\(?:[0-9a-fA-F]{1,6}|.)         # - Escape sequence
           )*
           (?:                                    # Invalid punctuation
-            [!"'%&(*;<?@^`|\\]}]                 # - NOTE: We exempt `)` from the list of checked
+            [!"'%(*;<?@^`|\\]}]                  # - NOTE: We exempt `)` from the list of checked
             |                                    #   symbols to avoid matching `:not(.invalid)`
             / (?!\\*)                            # - Avoid invalidating the start of a comment
           )+
@@ -2040,7 +2043,7 @@ repository:
         [-\\w*]+
         \\|
         (?!
-            [-\\[:.*\\#a-zA-Z_]    # Make sure there's a selector to match
+            [-\\[:.*&\\#a-zA-Z_]   # Make sure there's a selector to match
           | [^\\x00-\\x7F]
         )
       )
@@ -2054,6 +2057,9 @@ repository:
       )?
       (\\|)     # Namespace separator
     '''
+  'selector-nesting':
+    match: '&'
+    name: 'entity.name.tag.nesting.css'
   'selector-pseudo-classes':
     captures:
       '1':
@@ -2136,7 +2142,7 @@ repository:
         | mrow|ms|mscarries|mscarry|msgroup|msline|mspace|msqrt|msrow|mstack|mstyle|msub|msubsup
         | msup|mtable|mtd|mtext|mtr|munder|munderover|semantics
       )
-      (?=[+~>\\s,.\\#|){:\\[]|/\\*|$)
+      (?=[+~>\\s,.\\#|&){:\\[]|/\\*|$)
     '''
     name: 'entity.name.tag.css'
   'selector-universal':
