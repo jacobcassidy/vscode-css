@@ -23,10 +23,10 @@ patterns: [
     include: '#escapes'
   }
   {
-    include: '#combinators'
+    include: '#selector-combinators'
   }
   {
-    include: '#selector'
+    include: '#selectors'
   }
   {
     include: '#at-rules'
@@ -659,6 +659,7 @@ repository:
         include: '#escapes'
       }
     ]
+
   'color-keywords':
     patterns: [
       {
@@ -703,17 +704,6 @@ repository:
           (?![\\w-])
         '''
         name: 'invalid.deprecated.color.system.css'
-      }
-    ]
-  'combinators':
-    patterns: [
-      {
-        match: '/deep/|>>>'
-        name: 'invalid.deprecated.combinator.css'
-      }
-      {
-        match: '>>|>|\\+|~'
-        name: 'keyword.operator.combinator.css'
       }
     ]
   'commas':
@@ -1107,149 +1097,6 @@ repository:
       }
       {
         include: '#property-values'
-      }
-    ]
-
-  'functional-pseudo-classes':
-    patterns: [
-      {
-        # Text direction
-        begin: '(?i)((:)dir)(\\()'
-        beginCaptures:
-          '1':
-            name: 'entity.other.attribute-name.pseudo-class.css'
-          '2':
-            name: 'punctuation.definition.entity.css'
-          '3':
-            name: 'punctuation.section.function.begin.bracket.round.css'
-        end: '\\)'
-        endCaptures:
-          '0':
-            name: 'punctuation.section.function.end.bracket.round.css'
-        patterns: [
-          {
-            include: '#comment-block'
-          }
-          {
-            include: '#escapes'
-          }
-          {
-            match: '(?i)(?<![\\w-])(ltr|rtl)(?![\\w-])'
-            name: 'support.constant.text-direction.css'
-          }
-          {
-            include: '#property-values'
-          }
-        ]
-      }
-      {
-        # Language
-        begin: '(?i)((:)lang)(\\()'
-        beginCaptures:
-          '1':
-            name: 'entity.other.attribute-name.pseudo-class.css'
-          '2':
-            name: 'punctuation.definition.entity.css'
-          '3':
-            name: 'punctuation.section.function.begin.bracket.round.css'
-        end: '\\)'
-        endCaptures:
-          '0':
-            name: 'punctuation.section.function.end.bracket.round.css'
-        patterns: [
-          {
-            match: '(?<=[(,\\s])[a-zA-Z]+(-[a-zA-Z0-9]*|\\\\(?:[0-9a-fA-F]{1,6}|.))*(?=[),\\s])'
-            name: 'support.constant.language-range.css'
-          }
-          {
-            begin: '"'
-            beginCaptures:
-              '0':
-                name: 'punctuation.definition.string.begin.css'
-            end: '"'
-            endCaptures:
-              '0':
-                name: 'punctuation.definition.string.end.css'
-            name: 'string.quoted.double.css'
-            patterns: [
-              {
-                include: '#escapes'
-              }
-              {
-                match: '(?<=["\\s])[a-zA-Z*]+(-[a-zA-Z0-9*]*)*(?=["\\s])'
-                name: 'support.constant.language-range.css'
-              }
-            ]
-          }
-          {
-            begin: "'"
-            beginCaptures:
-              '0':
-                name: 'punctuation.definition.string.begin.css'
-            end: "'"
-            endCaptures:
-              '0':
-                name: 'punctuation.definition.string.end.css'
-            name: 'string.quoted.single.css'
-            patterns: [
-              {
-                include: '#escapes'
-              }
-              {
-                match: "(?<=['\\s])[a-zA-Z*]+(-[a-zA-Z0-9*]*)*(?=['\\s])"
-                name: 'support.constant.language-range.css'
-              }
-            ]
-          }
-          {
-            include: '#commas'
-          }
-        ]
-      }
-      {
-        # Logical / Selector-based
-        begin: '(?i)((:)(?:not|has|matches|where|is))(\\()'
-        beginCaptures:
-          '1':
-            name: 'entity.other.attribute-name.pseudo-class.css'
-          '2':
-            name: 'punctuation.definition.entity.css'
-          '3':
-            name: 'punctuation.section.function.begin.bracket.round.css'
-        end: '\\)'
-        endCaptures:
-          '0':
-            name: 'punctuation.section.function.end.bracket.round.css'
-        patterns: [
-          {
-            include: '#selector-innards'
-          }
-        ]
-      }
-      {
-        # Child-indexed
-        begin: '(?i)((:)nth-(?:last-)?(?:child|of-type))(\\()'
-        beginCaptures:
-          '1':
-            name: 'entity.other.attribute-name.pseudo-class.css'
-          '2':
-            name: 'punctuation.definition.entity.css'
-          '3':
-            name: 'punctuation.section.function.begin.bracket.round.css'
-        end: '\\)'
-        endCaptures:
-          '0':
-            name: 'punctuation.section.function.end.bracket.round.css'
-        patterns: [
-          {
-            match: '(?i)[+-]?(\\d+n?|n)(\\s*[+-]\\s*\\d+)?'
-            name: 'constant.numeric.css'
-          }
-          {
-            match: '(?i)even|odd'
-            name: 'support.constant.parity.css'
-          }
-        ]
       }
     ]
   'media-features':
@@ -1683,55 +1530,7 @@ repository:
         name: 'keyword.other.important.css'
       }
     ]
-  'pseudo-classes':
-    captures:
-      '1':
-        name: 'punctuation.definition.entity.css'
-      '2':
-        name: 'invalid.illegal.colon.css'
-    match: '''(?xi)
-      (:)(:*)
-      (?: active|any-link|checked|default|disabled|empty|enabled|first
-        | (?:first|last|only)-(?:child|of-type)|focus|focus-visible|focus-within|fullscreen|host|hover
-        | in-range|indeterminate|invalid|left|link|optional|out-of-range
-        | read-only|read-write|required|right|root|scope|target|unresolved
-        | valid|visited
-      )(?![\\w-]|\\s*[;}])
-    '''
-    name: 'entity.other.attribute-name.pseudo-class.css'
-  'pseudo-elements':
-    captures:
-      '1':
-        name: 'punctuation.definition.entity.css'
-      '2':
-        name: 'punctuation.definition.entity.css'
-    match: '''(?xi)
-      (?:
-        (::?)                       # Elements using both : and :: notation
-        (?: after
-          | before
-          | first-letter
-          | first-line
-          | (?:-(?:ah|apple|atsc|epub|hp|khtml|moz
-                  |ms|o|rim|ro|tc|wap|webkit|xv)
-              | (?:mso|prince))
-            -[a-z-]+
-        )
-        |
-        (::)                        # Double-colon only
-        (?: backdrop
-          | content
-          | grammar-error
-          | marker
-          | placeholder
-          | selection
-          | shadow
-          | spelling-error
-        )
-      )
-      (?![\\w-]|\\s*[;}])
-    '''
-    name: 'entity.other.attribute-name.pseudo-element.css'
+
   'rule-list':
     begin: '{'
     beginCaptures:
@@ -1803,7 +1602,8 @@ repository:
         name: 'punctuation.terminator.rule.css'
       }
     ]
-  'selector':
+
+  'selectors':
     begin: '''(?x)
       (?=
         (?:\\|)?                    # Possible anonymous namespace prefix
@@ -1821,10 +1621,10 @@ repository:
     name: 'meta.selector.css'
     patterns: [
       {
-        include: '#selector-innards'
+        include: '#selectors-innards'
       }
     ]
-  'selector-innards':
+  'selectors-innards':
     patterns: [
       {
         include: '#comment-block'
@@ -1836,242 +1636,494 @@ repository:
         include: '#escapes'
       }
       {
-        include: '#combinators'
+        include: '#selector-combinators'
+      }
+      {
+        include: '#selector-namespace'
+      }
+      {
+        include: '#selector-tag-names'
+      }
+      {
+        include: '#selector-universal'
+      }
+      {
+        include: "#selector-invalid"
+      }
+      {
+        include: '#selector-class'
+      }
+      {
+        include: '#selector-id'
+      }
+      {
+        include: '#selector-attribute'
+      }
+      {
+        include: '#selector-pseudo-classes'
+      }
+      {
+        include: '#selector-pseudo-elements'
+      }
+      {
+        include: '#selector-functional-pseudo-classes'
+      }
+      {
+        include: '#selector-custom'
+      }
+    ]
+  'selector-attribute':
+    begin: '\\['
+    beginCaptures:
+      '0':
+        name: 'punctuation.definition.entity.begin.bracket.square.css'
+    end: '\\]'
+    endCaptures:
+      '0':
+        name: 'punctuation.definition.entity.end.bracket.square.css'
+    name: 'meta.attribute-selector.css'
+    patterns: [
+      {
+        include: '#comment-block'
+      }
+      {
+        include: '#string'
+      }
+      {
+        captures:
+          '1':
+            name: 'storage.modifier.ignore-case.css'
+        match: '(?<=["\'\\s]|^|\\*/)\\s*([iI])\\s*(?=[\\s\\]]|/\\*|$)'
+      }
+      {
+        captures:
+          '1':
+            name: 'string.unquoted.attribute-value.css'
+            patterns: [
+              {
+                include: '#escapes'
+              }
+            ]
+        match: '(?x)(?<==)\\s*((?!/\\*)(?:[^\\\\"\'\\s\\]]|\\\\.)+)'
+      }
+      {
+        include: '#escapes'
+      }
+      {
+        match: '[~|^$*]?='
+        name: 'keyword.operator.pattern.css'
+      }
+      {
+        match: '\\|'
+        name: 'punctuation.separator.css'
       }
       {
         captures:
           '1':
             name: 'entity.other.namespace-prefix.css'
-          '2':
-            name: 'punctuation.separator.css'
-        match: '''(?x)
-          (?:^|(?<=[\\s,(};]))         # Follows whitespace, comma, semicolon, or bracket
-          (?!
-            [-\\w*]+
-            \\|
-            (?!
-                [-\\[:.*\\#a-zA-Z_]    # Make sure there's a selector to match
-              | [^\\x00-\\x7F]
-            )
-          )
-          (
-            (?: [-a-zA-Z_]    | [^\\x00-\\x7F] )   # First letter
-            (?: [-a-zA-Z0-9_] | [^\\x00-\\x7F]     # Remainder of identifier
-              | \\\\(?:[0-9a-fA-F]{1,6}|.)
-            )*
-            |
-            \\*     # Universal namespace
-          )?
-          (\\|)     # Namespace separator
-        '''
-      }
-      {
-        include: '#tag-names'
-      }
-      {
-        match: '\\*'
-        name: 'entity.name.tag.wildcard.css'
-      }
-      {
-        captures:
-          '1':
-            name: 'punctuation.definition.entity.css'
-          '2':
             patterns: [
               {
                 include: '#escapes'
               }
             ]
-        match: '''(?x) (?<![@\\w-])
-          ([.\\#])
-          # Invalid identifier
-          (
-            (?:
-              # Starts with ASCII digits, with possible hyphen preceding it
-              -?[0-9]
-              |
-              # Consists of a hyphen only
-              -                                      # Terminated by either:
-              (?= $                                  # - End-of-line
-                | [\\s,.\\#)\\[:{>+~|]               # - Followed by another selector
-                | /\\*                               # - Followed by a block comment
+        match: '''(?x)
+          # Qualified namespace prefix
+          ( -?(?!\\d)(?:[\\w-]|[^\\x00-\\x7F]|\\\\(?:[0-9a-fA-F]{1,6}|.))+
+          | \\*
+          )
+          # Lookahead to ensure there's a valid identifier ahead
+          (?=
+            \\| (?!\\s|=|$|\\])
+            (?: -?(?!\\d)
+              |   [\\\\\\w-]
+              |   [^\\x00-\\x7F]
               )
-              |
-              # Name contains unescaped ASCII symbol
-              (?:                                    # Check for acceptable preceding characters
-                  [-a-zA-Z_0-9]|[^\\x00-\\x7F]       # - Valid selector character
-                | \\\\(?:[0-9a-fA-F]{1,6}|.)         # - Escape sequence
-              )*
-              (?:                                    # Invalid punctuation
-                [!"'%&(*;<?@^`|\\]}]                 # - NOTE: We exempt `)` from the list of checked
-                |                                    #   symbols to avoid matching `:not(.invalid)`
-                / (?!\\*)                            # - Avoid invalidating the start of a comment
-              )+
-            )
-            # Mark remainder of selector invalid
-            (?: [-a-zA-Z_0-9]|[^\\x00-\\x7F]         # - Otherwise valid identifier characters
-              | \\\\(?:[0-9a-fA-F]{1,6}|.)           # - Escape sequence
-            )*
           )
         '''
-        name: 'invalid.illegal.bad-identifier.css'
       }
       {
         captures:
           '1':
-            name: 'punctuation.definition.entity.css'
-          '2':
+            name: 'entity.other.attribute-name.css'
             patterns: [
               {
                 include: '#escapes'
               }
             ]
         match: '''(?x)
-          (\\.)                                  # Valid class-name
-          (
-            (?: [-a-zA-Z_0-9]|[^\\x00-\\x7F]     # Valid identifier characters
-              | \\\\(?:[0-9a-fA-F]{1,6}|.)       # Escape sequence
-            )+
-          )                                      # Followed by either:
-          (?= $                                  # - End of the line
-            | [\\s,.\\#)\\[:{>+~|]               # - Another selector
-            | /\\*                               # - A block comment
-          )
+          (-?(?!\\d)(?>[\\w-]|[^\\x00-\\x7F]|\\\\(?:[0-9a-fA-F]{1,6}|.))+)
+          \\s*
+          (?=[~|^\\]$*=]|/\\*)
         '''
-        name: 'entity.other.attribute-name.class.css'
+      }
+    ]
+  'selector-class':
+    captures:
+      '1':
+        name: 'punctuation.definition.entity.css'
+      '2':
+        patterns: [
+          {
+            include: '#escapes'
+          }
+        ]
+    match: '''(?x)
+      (\\.)                                  # Valid class-name
+      (
+        (?: [-a-zA-Z_0-9]|[^\\x00-\\x7F]     # Valid identifier characters
+          | \\\\(?:[0-9a-fA-F]{1,6}|.)       # Escape sequence
+        )+
+      )                                      # Followed by either:
+      (?= $                                  # - End of the line
+        | [\\s,.\\#)\\[:{>+~|]               # - Another selector
+        | /\\*                               # - A block comment
+      )
+    '''
+    name: 'entity.other.attribute-name.class.css'
+  'selector-combinators':
+    patterns: [
+      {
+        match: '/deep/|>>>'
+        name: 'invalid.deprecated.combinator.css'
       }
       {
-        captures:
-          '1':
-            name: 'punctuation.definition.entity.css'
-          '2':
-            patterns: [
-              {
-                include: '#escapes'
-              }
-            ]
-        match: '''(?x)
-          (\\#)
-          (
-            -?
-            (?![0-9])
-            (?:[-a-zA-Z0-9_]|[^\\x00-\\x7F]|\\\\(?:[0-9a-fA-F]{1,6}|.))+
-          )
-          (?=$|[\\s,.\\#)\\[:{>+~|]|/\\*)
-        '''
-        name: 'entity.other.attribute-name.id.css'
+        match: '>>|>|\\+|~'
+        name: 'keyword.operator.combinator.css'
       }
+    ]
+  'selector-custom':
+    match: '''(?x) (?<![@\\w-])
+      (?=            # Custom element names must:
+        [a-z]        # - start with a lowercase ASCII letter,
+        \\w* -       # - contain at least one dash
+      )
+      (?:
+        (?![A-Z])    # No uppercase ASCII letters are allowed
+        [\\w-]       # Allow any other word character or dash
+      )+
+      (?![(\\w-])
+    '''
+    name: 'entity.name.tag.custom.css'
+  'selector-functional-pseudo-classes':
+    patterns: [
       {
-        begin: '\\['
+        # Text direction
+        begin: '(?i)((:)dir)(\\()'
         beginCaptures:
-          '0':
-            name: 'punctuation.definition.entity.begin.bracket.square.css'
-        end: '\\]'
+          '1':
+            name: 'entity.other.attribute-name.pseudo-class.css'
+          '2':
+            name: 'punctuation.definition.entity.css'
+          '3':
+            name: 'punctuation.section.function.begin.bracket.round.css'
+        end: '\\)'
         endCaptures:
           '0':
-            name: 'punctuation.definition.entity.end.bracket.square.css'
-        name: 'meta.attribute-selector.css'
+            name: 'punctuation.section.function.end.bracket.round.css'
         patterns: [
           {
             include: '#comment-block'
           }
           {
-            include: '#string'
-          }
-          {
-            captures:
-              '1':
-                name: 'storage.modifier.ignore-case.css'
-            match: '(?<=["\'\\s]|^|\\*/)\\s*([iI])\\s*(?=[\\s\\]]|/\\*|$)'
-          }
-          {
-            captures:
-              '1':
-                name: 'string.unquoted.attribute-value.css'
-                patterns: [
-                  {
-                    include: '#escapes'
-                  }
-                ]
-            match: '(?x)(?<==)\\s*((?!/\\*)(?:[^\\\\"\'\\s\\]]|\\\\.)+)'
-          }
-          {
             include: '#escapes'
           }
           {
-            match: '[~|^$*]?='
-            name: 'keyword.operator.pattern.css'
+            match: '(?i)(?<![\\w-])(ltr|rtl)(?![\\w-])'
+            name: 'support.constant.text-direction.css'
           }
           {
-            match: '\\|'
-            name: 'punctuation.separator.css'
-          }
-          {
-            captures:
-              '1':
-                name: 'entity.other.namespace-prefix.css'
-                patterns: [
-                  {
-                    include: '#escapes'
-                  }
-                ]
-            match: '''(?x)
-              # Qualified namespace prefix
-              ( -?(?!\\d)(?:[\\w-]|[^\\x00-\\x7F]|\\\\(?:[0-9a-fA-F]{1,6}|.))+
-              | \\*
-              )
-              # Lookahead to ensure there's a valid identifier ahead
-              (?=
-                \\| (?!\\s|=|$|\\])
-                (?: -?(?!\\d)
-                 |   [\\\\\\w-]
-                 |   [^\\x00-\\x7F]
-                 )
-              )
-            '''
-          }
-          {
-            captures:
-              '1':
-                name: 'entity.other.attribute-name.css'
-                patterns: [
-                  {
-                    include: '#escapes'
-                  }
-                ]
-            match: '''(?x)
-              (-?(?!\\d)(?>[\\w-]|[^\\x00-\\x7F]|\\\\(?:[0-9a-fA-F]{1,6}|.))+)
-              \\s*
-              (?=[~|^\\]$*=]|/\\*)
-            '''
+            include: '#property-values'
           }
         ]
       }
       {
-        include: '#pseudo-classes'
+        # Language
+        begin: '(?i)((:)lang)(\\()'
+        beginCaptures:
+          '1':
+            name: 'entity.other.attribute-name.pseudo-class.css'
+          '2':
+            name: 'punctuation.definition.entity.css'
+          '3':
+            name: 'punctuation.section.function.begin.bracket.round.css'
+        end: '\\)'
+        endCaptures:
+          '0':
+            name: 'punctuation.section.function.end.bracket.round.css'
+        patterns: [
+          {
+            match: '(?<=[(,\\s])[a-zA-Z]+(-[a-zA-Z0-9]*|\\\\(?:[0-9a-fA-F]{1,6}|.))*(?=[),\\s])'
+            name: 'support.constant.language-range.css'
+          }
+          {
+            begin: '"'
+            beginCaptures:
+              '0':
+                name: 'punctuation.definition.string.begin.css'
+            end: '"'
+            endCaptures:
+              '0':
+                name: 'punctuation.definition.string.end.css'
+            name: 'string.quoted.double.css'
+            patterns: [
+              {
+                include: '#escapes'
+              }
+              {
+                match: '(?<=["\\s])[a-zA-Z*]+(-[a-zA-Z0-9*]*)*(?=["\\s])'
+                name: 'support.constant.language-range.css'
+              }
+            ]
+          }
+          {
+            begin: "'"
+            beginCaptures:
+              '0':
+                name: 'punctuation.definition.string.begin.css'
+            end: "'"
+            endCaptures:
+              '0':
+                name: 'punctuation.definition.string.end.css'
+            name: 'string.quoted.single.css'
+            patterns: [
+              {
+                include: '#escapes'
+              }
+              {
+                match: "(?<=['\\s])[a-zA-Z*]+(-[a-zA-Z0-9*]*)*(?=['\\s])"
+                name: 'support.constant.language-range.css'
+              }
+            ]
+          }
+          {
+            include: '#commas'
+          }
+        ]
       }
       {
-        include: '#pseudo-elements'
+        # Logical / Selector-based
+        begin: '(?i)((:)(?:not|has|matches|where|is))(\\()'
+        beginCaptures:
+          '1':
+            name: 'entity.other.attribute-name.pseudo-class.css'
+          '2':
+            name: 'punctuation.definition.entity.css'
+          '3':
+            name: 'punctuation.section.function.begin.bracket.round.css'
+        end: '\\)'
+        endCaptures:
+          '0':
+            name: 'punctuation.section.function.end.bracket.round.css'
+        patterns: [
+          {
+            include: '#selectors-innards'
+          }
+        ]
       }
       {
-        include: '#functional-pseudo-classes'
-      }
-      # Custom HTML elements
-      {
-        match: '''(?x) (?<![@\\w-])
-          (?=            # Custom element names must:
-            [a-z]        # - start with a lowercase ASCII letter,
-            \\w* -       # - contain at least one dash
-          )
-          (?:
-            (?![A-Z])    # No uppercase ASCII letters are allowed
-            [\\w-]       # Allow any other word character or dash
-          )+
-          (?![(\\w-])
-        '''
-        name: 'entity.name.tag.custom.css'
+        # Child-indexed
+        begin: '(?i)((:)nth-(?:last-)?(?:child|of-type))(\\()'
+        beginCaptures:
+          '1':
+            name: 'entity.other.attribute-name.pseudo-class.css'
+          '2':
+            name: 'punctuation.definition.entity.css'
+          '3':
+            name: 'punctuation.section.function.begin.bracket.round.css'
+        end: '\\)'
+        endCaptures:
+          '0':
+            name: 'punctuation.section.function.end.bracket.round.css'
+        patterns: [
+          {
+            match: '(?i)[+-]?(\\d+n?|n)(\\s*[+-]\\s*\\d+)?'
+            name: 'constant.numeric.css'
+          }
+          {
+            match: '(?i)even|odd'
+            name: 'support.constant.parity.css'
+          }
+        ]
       }
     ]
+  'selector-id':
+    captures:
+      '1':
+        name: 'punctuation.definition.entity.css'
+      '2':
+        patterns: [
+          {
+            include: '#escapes'
+          }
+        ]
+    match: '''(?x)
+      (\\#)
+      (
+        -?
+        (?![0-9])
+        (?:[-a-zA-Z0-9_]|[^\\x00-\\x7F]|\\\\(?:[0-9a-fA-F]{1,6}|.))+
+      )
+      (?=$|[\\s,.\\#)\\[:{>+~|]|/\\*)
+    '''
+    name: 'entity.other.attribute-name.id.css'
+  'selector-invalid':
+    captures:
+      '1':
+        name: 'punctuation.definition.entity.css'
+      '2':
+        patterns: [
+          {
+            include: '#escapes'
+          }
+        ]
+    match: '''(?x) (?<![@\\w-])
+      ([.\\#])
+      # Invalid identifier
+      (
+        (?:
+          # Starts with ASCII digits, with possible hyphen preceding it
+          -?[0-9]
+          |
+          # Consists of a hyphen only
+          -                                      # Terminated by either:
+          (?= $                                  # - End-of-line
+            | [\\s,.\\#)\\[:{>+~|]               # - Followed by another selector
+            | /\\*                               # - Followed by a block comment
+          )
+          |
+          # Name contains unescaped ASCII symbol
+          (?:                                    # Check for acceptable preceding characters
+              [-a-zA-Z_0-9]|[^\\x00-\\x7F]       # - Valid selector character
+            | \\\\(?:[0-9a-fA-F]{1,6}|.)         # - Escape sequence
+          )*
+          (?:                                    # Invalid punctuation
+            [!"'%&(*;<?@^`|\\]}]                 # - NOTE: We exempt `)` from the list of checked
+            |                                    #   symbols to avoid matching `:not(.invalid)`
+            / (?!\\*)                            # - Avoid invalidating the start of a comment
+          )+
+        )
+        # Mark remainder of selector invalid
+        (?: [-a-zA-Z_0-9]|[^\\x00-\\x7F]         # - Otherwise valid identifier characters
+          | \\\\(?:[0-9a-fA-F]{1,6}|.)           # - Escape sequence
+        )*
+      )
+    '''
+    name: 'invalid.illegal.bad-identifier.css'
+  'selector-namespace':
+    captures:
+      '1':
+        name: 'entity.other.namespace-prefix.css'
+      '2':
+        name: 'punctuation.separator.css'
+    match: '''(?x)
+      (?:^|(?<=[\\s,(};]))         # Follows whitespace, comma, semicolon, or bracket
+      (?!
+        [-\\w*]+
+        \\|
+        (?!
+            [-\\[:.*\\#a-zA-Z_]    # Make sure there's a selector to match
+          | [^\\x00-\\x7F]
+        )
+      )
+      (
+        (?: [-a-zA-Z_]    | [^\\x00-\\x7F] )   # First letter
+        (?: [-a-zA-Z0-9_] | [^\\x00-\\x7F]     # Remainder of identifier
+          | \\\\(?:[0-9a-fA-F]{1,6}|.)
+        )*
+        |
+        \\*     # Universal namespace
+      )?
+      (\\|)     # Namespace separator
+    '''
+  'selector-pseudo-classes':
+    captures:
+      '1':
+        name: 'punctuation.definition.entity.css'
+      '2':
+        name: 'invalid.illegal.colon.css'
+    match: '''(?xi)
+      (:)(:*)
+      (?: active|any-link|checked|default|disabled|empty|enabled|first
+        | (?:first|last|only)-(?:child|of-type)|focus|focus-visible|focus-within|fullscreen|host|hover
+        | in-range|indeterminate|invalid|left|link|optional|out-of-range
+        | read-only|read-write|required|right|root|scope|target|unresolved
+        | valid|visited
+      )(?![\\w-]|\\s*[;}])
+    '''
+    name: 'entity.other.attribute-name.pseudo-class.css'
+  'selector-pseudo-elements':
+    captures:
+      '1':
+        name: 'punctuation.definition.entity.css'
+      '2':
+        name: 'punctuation.definition.entity.css'
+    match: '''(?xi)
+      (?:
+        (::?)                       # Elements using both : and :: notation
+        (?: after
+          | before
+          | first-letter
+          | first-line
+          | (?:-(?:ah|apple|atsc|epub|hp|khtml|moz
+                  |ms|o|rim|ro|tc|wap|webkit|xv)
+              | (?:mso|prince))
+            -[a-z-]+
+        )
+        |
+        (::)                        # Double-colon only
+        (?: backdrop
+          | content
+          | grammar-error
+          | marker
+          | placeholder
+          | selection
+          | shadow
+          | spelling-error
+        )
+      )
+      (?![\\w-]|\\s*[;}])
+    '''
+    name: 'entity.other.attribute-name.pseudo-element.css'
+  'selector-tag-names':
+    match: '''(?xi) (?<![\\w:-])
+      (?:
+          # HTML
+          a|abbr|acronym|address|applet|area|article|aside|audio|b|base|basefont|bdi|bdo|bgsound
+        | big|blink|blockquote|body|br|button|canvas|caption|center|cite|code|col|colgroup|command
+        | content|data|datalist|dd|del|details|dfn|dialog|dir|div|dl|dt|element|em|embed|fieldset
+        | figcaption|figure|font|footer|form|frame|frameset|h[1-6]|head|header|hgroup|hr|html|i
+        | iframe|image|img|input|ins|isindex|kbd|keygen|label|legend|li|link|listing|main|map|mark
+        | marquee|math|menu|menuitem|meta|meter|multicol|nav|nextid|nobr|noembed|noframes|noscript
+        | object|ol|optgroup|option|output|p|param|picture|plaintext|pre|progress|q|rb|rp|rt|rtc
+        | ruby|s|samp|script|section|select|shadow|slot|small|source|spacer|span|strike|strong
+        | style|sub|summary|sup|table|tbody|td|template|textarea|tfoot|th|thead|time|title|tr
+        | track|tt|u|ul|var|video|wbr|xmp
+
+        # SVG
+        | altGlyph|altGlyphDef|altGlyphItem|animate|animateColor|animateMotion|animateTransform
+        | circle|clipPath|color-profile|cursor|defs|desc|discard|ellipse|feBlend|feColorMatrix
+        | feComponentTransfer|feComposite|feConvolveMatrix|feDiffuseLighting|feDisplacementMap
+        | feDistantLight|feDropShadow|feFlood|feFuncA|feFuncB|feFuncG|feFuncR|feGaussianBlur
+        | feImage|feMerge|feMergeNode|feMorphology|feOffset|fePointLight|feSpecularLighting
+        | feSpotLight|feTile|feTurbulence|filter|font-face|font-face-format|font-face-name
+        | font-face-src|font-face-uri|foreignObject|g|glyph|glyphRef|hatch|hatchpath|hkern
+        | line|linearGradient|marker|mask|mesh|meshgradient|meshpatch|meshrow|metadata
+        | missing-glyph|mpath|path|pattern|polygon|polyline|radialGradient|rect|set|solidcolor
+        | stop|svg|switch|symbol|text|textPath|tref|tspan|use|view|vkern
+
+        # MathML
+        | annotation|annotation-xml|maction|maligngroup|malignmark|math|menclose|merror|mfenced
+        | mfrac|mglyph|mi|mlabeledtr|mlongdiv|mmultiscripts|mn|mo|mover|mpadded|mphantom|mroot
+        | mrow|ms|mscarries|mscarry|msgroup|msline|mspace|msqrt|msrow|mstack|mstyle|msub|msubsup
+        | msup|mtable|mtd|mtext|mtr|munder|munderover|semantics
+      )
+      (?=[+~>\\s,.\\#|){:\\[]|/\\*|$)
+    '''
+    name: 'entity.name.tag.css'
+  'selector-universal':
+    match: '\\*'
+    name: 'entity.name.tag.wildcard.css'
+
   'string':
     patterns: [
       {
@@ -2127,42 +2179,6 @@ repository:
         ]
       }
     ]
-  'tag-names':
-    match: '''(?xi) (?<![\\w:-])
-      (?:
-          # HTML
-          a|abbr|acronym|address|applet|area|article|aside|audio|b|base|basefont|bdi|bdo|bgsound
-        | big|blink|blockquote|body|br|button|canvas|caption|center|cite|code|col|colgroup|command
-        | content|data|datalist|dd|del|details|dfn|dialog|dir|div|dl|dt|element|em|embed|fieldset
-        | figcaption|figure|font|footer|form|frame|frameset|h[1-6]|head|header|hgroup|hr|html|i
-        | iframe|image|img|input|ins|isindex|kbd|keygen|label|legend|li|link|listing|main|map|mark
-        | marquee|math|menu|menuitem|meta|meter|multicol|nav|nextid|nobr|noembed|noframes|noscript
-        | object|ol|optgroup|option|output|p|param|picture|plaintext|pre|progress|q|rb|rp|rt|rtc
-        | ruby|s|samp|script|section|select|shadow|slot|small|source|spacer|span|strike|strong
-        | style|sub|summary|sup|table|tbody|td|template|textarea|tfoot|th|thead|time|title|tr
-        | track|tt|u|ul|var|video|wbr|xmp
-
-        # SVG
-        | altGlyph|altGlyphDef|altGlyphItem|animate|animateColor|animateMotion|animateTransform
-        | circle|clipPath|color-profile|cursor|defs|desc|discard|ellipse|feBlend|feColorMatrix
-        | feComponentTransfer|feComposite|feConvolveMatrix|feDiffuseLighting|feDisplacementMap
-        | feDistantLight|feDropShadow|feFlood|feFuncA|feFuncB|feFuncG|feFuncR|feGaussianBlur
-        | feImage|feMerge|feMergeNode|feMorphology|feOffset|fePointLight|feSpecularLighting
-        | feSpotLight|feTile|feTurbulence|filter|font-face|font-face-format|font-face-name
-        | font-face-src|font-face-uri|foreignObject|g|glyph|glyphRef|hatch|hatchpath|hkern
-        | line|linearGradient|marker|mask|mesh|meshgradient|meshpatch|meshrow|metadata
-        | missing-glyph|mpath|path|pattern|polygon|polyline|radialGradient|rect|set|solidcolor
-        | stop|svg|switch|symbol|text|textPath|tref|tspan|use|view|vkern
-
-        # MathML
-        | annotation|annotation-xml|maction|maligngroup|malignmark|math|menclose|merror|mfenced
-        | mfrac|mglyph|mi|mlabeledtr|mlongdiv|mmultiscripts|mn|mo|mover|mpadded|mphantom|mroot
-        | mrow|ms|mscarries|mscarry|msgroup|msline|mspace|msqrt|msrow|mstack|mstyle|msub|msubsup
-        | msup|mtable|mtd|mtext|mtr|munder|munderover|semantics
-      )
-      (?=[+~>\\s,.\\#|){:\\[]|/\\*|$)
-    '''
-    name: 'entity.name.tag.css'
   'unicode-range':
     captures:
       '0':
