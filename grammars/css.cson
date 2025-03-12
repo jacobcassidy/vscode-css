@@ -36,6 +36,9 @@ patterns: [
   }
 ]
 repository:
+  'arithmetic-operators':
+    match: '[*/]|(?<=\\s|^)[-+](?=\\s|$)'
+    name: 'keyword.operator.arithmetic.css'
   'at-rules':
     patterns: [
       {
@@ -809,8 +812,7 @@ repository:
     name: 'meta.function.calc.css'
     patterns: [
       {
-        match: '[*/]|(?<=\\s|^)[-+](?=\\s|$)'
-        name: 'keyword.operator.arithmetic.css'
+        include: '#arithmetic-operators'
       }
       {
         include: '#property-values'
