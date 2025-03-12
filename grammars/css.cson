@@ -798,6 +798,26 @@ repository:
         include: '#function-var'
       }
     ]
+  'functions-nesting':
+    begin: '\\('
+    beginCaptures:
+      '0':
+        name: 'punctuation.definition.function.begin.bracket.round.css'
+    end: '\\)'
+    endCaptures:
+      '0':
+        name: 'punctuation.definition.function.end.bracket.round.css'
+    patterns: [
+      {
+        include: '#arithmetic-operators'
+      }
+      {
+        include: '#property-values'
+      }
+      {
+        include: '#functions-nesting'
+      }
+    ]
   'function-calc':
     begin: '(?i)(?<![\\w-])(calc)(\\()'
     beginCaptures:
@@ -816,6 +836,9 @@ repository:
       }
       {
         include: '#property-values'
+      }
+      {
+        include: '#functions-nesting'
       }
     ]
   'function-colors':
