@@ -23,9 +23,6 @@ patterns: [
     include: '#escapes'
   }
   {
-    include: '#selector-invalid-combinators'
-  }
-  {
     include: '#selectors'
   }
   {
@@ -1667,24 +1664,139 @@ repository:
     name: 'variable.css'
 
   'selectors':
-    begin: '''(?x)
-      (?=
-        (?:\\|)?                    # Possible anonymous namespace prefix
-        (?:
-          [-\\[:.*&\\#a-zA-Z_]      # Valid selector character
-          |
-          [^\\x00-\\x7F]            # Which can include non-ASCII symbols
-          |
-          \\\\                      # Or an escape sequence
-          (?:[0-9a-fA-F]{1,6}|.)
-        )
-      )
-    '''
-    end: '(?=\\s*[/@{)])'
-    name: 'meta.selector.css'
     patterns: [
       {
-        include: '#selectors-innards'
+        include: '#selector-invalid-combinators'
+      }
+      {
+        begin: '''(?xi)
+          # Match must be preceded by one of the following:
+          (?<=
+              ^                             # Start of line
+            | (^|[^\\:])\\s                 # Whitespace, after the start of a line or any character except a colon (which denotes a property)
+            | ;                             # Semicolon (condensed property list syntax)
+            | [{}]                          # Opening or closing brace (condensed property list syntax)
+            | \\*/                          # Comment end
+            | \\\\(?:[0-9a-fA-F]{1,6}|.)    # Escape sequence
+          )
+
+          # Match may contain any of the following:
+          (?=
+            (?:
+              # Match must start with one of the following:
+                &                           # Nesting selector
+              | \\*                         # Universal selector
+              | [>~+]                       # Selector combinator
+              | \\|                         # Selector namespace separator
+              | \\[                         # Attribute selector opening bracket
+              | [a-zA-Z]                    # Letter
+              | [^\\x00-\\x7F]              # Non-ASCII symbols
+              | \\\\(?:[0-9a-fA-F]{1,6}|.)  # Escape sequence
+
+              # Or one of the following symbols, followed by a word character, underscore, or escape sequence:
+              | (?:
+                    \\.                     # Class selector
+                  | \\#                     # ID selector
+                )
+                (?:
+                    [\\w-]                      # Word character or hyphen
+                  | \\\\(?:[0-9a-fA-F]{1,6}|.)  # Escape sequence
+                )
+
+              # Or one of the following symbols, followed a letter or hyphen:
+              | (?:
+                    \\:                     # Pseudo-class
+                  | \\:\\:                  # Pseudo-element
+                )
+                [a-zA-Z-]                   # Letter or hyphen
+            )
+          )
+
+          # Match must NOT contain any of the following:
+          (?!
+              [\\w-]*[\\:]+\\s      # One or more colons immediately followed by a whitespace (denotes a property or invalid sequence)
+            | [^{]*;                # Any characters and a semicolon before an opening bracket (denotes the end of a property)
+            | [^{]*}                # A closing bracket before an opening bracket (denotes a property)
+            | [^\\:]+(\\:\\:):+     # More than two colons (invalid sequence)
+            |                       # A single-colon, unless it's part of a pseudo-class or pseudo-element, inside a bracket, or ends with a brace
+              (?![^;]*\\{)            # Ignore the single-colon exclude rule if the colon is followed by an opening curly brace before a semicolon
+              (?:
+                [^\\[\\{]*\\:         # A single-colon, not preceded by a opening square bracket or curly brace, and not followed by:
+                (?!
+                  # Allow pseudo-classes:
+                  # NOTE: `left` and `right` are not allowed as pseudo-classes unless they are followed with an opening curly brace since they are used as property values. `default` and `optional` are also not allowed as pseudo-classes unless they are used with specific selectors listed below.
+                    active|any-link|checked|default|disabled|empty|enabled|first
+                  | (?:first|last|only)-(?:child|of-type)|focus|focus-visible|focus-within|fullscreen|host|hover
+                  | in-range|indeterminate|invalid|link|optional|out-of-range
+                  | read-only|read-write|required|root|scope|target|unresolved
+                  | valid|visited
+
+                  # Allow functional pseudo-classes:
+                  | (?: dir|lang
+                      | not|has|matches|where|is
+                      | nth-(?:last-)?(?:child|of-type)
+                    )\\(
+
+                  # Allow double-colon pseudo-elements:
+                  | \\:
+
+                  # Allow single-colon pseudo-elements:
+                  | after
+                  | before
+                  | first-letter
+                  | first-line
+                  | (?:
+                      \\-
+                      (?:
+                          ah|apple|atsc|epub|hp|khtml|moz
+                        | ms|o|rim|ro|tc|wap|webkit|xv
+                      )
+                      | (?:
+                          mso|prince
+                        )
+                    )
+                    -[a-z-]+
+
+                  # Allow single-colon for legacy pseudo-elements:
+                  # NOTE: `content` is not allowed as a legacy pseudo-element unless it's followed with an opening curly brace since it's used as a property value.
+                  | backdrop
+                  | grammar-error
+                  | marker
+                  | placeholder
+                  | selection
+                  | shadow
+                  | spelling-error
+                )
+
+                | # Only allow the `default` pseudo-class for specific selectors (otherwise it's a property value):
+                  (?! button|input|option|select ) # Allowed Selectors
+                  [^\\:]+\\:default                # `:default` pseudo-class
+
+                | # Only allow the `optional` pseudo-class for specific selectors (otherwise it's a property value):
+                  (?! input|select|textarea )      # Allowed Selectors
+                  [^\\:]+\\:optional               # `:optional` pseudo-class
+              )
+          )
+        '''
+        end: '''(?x)
+          # Match must end with:
+          (?=
+            \\s*                    # Optional whitespace and one of the following:
+            (?:
+                \\/                 # Comment
+              | @                   # At-rule
+              | {                   # Opening property list brace
+              | \\)                 # Closing function brace
+              | $                   # End of line
+            )
+          )
+        '''
+        name: 'meta.selector.css'
+        patterns: [
+          {
+            include: '#selectors-innards'
+          }
+        ]
       }
     ]
   'selectors-innards':
